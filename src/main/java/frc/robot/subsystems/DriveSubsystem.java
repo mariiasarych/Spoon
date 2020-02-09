@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU;  //Pigeon
 import com.ctre.phoenix.motorcontrol.can.*; //TalonSRX
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro; //gyro
 
 public class DriveSubsystem extends SubsystemBase { //create variables are here
   private static final int deviceID1 = 1;
@@ -35,7 +35,6 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   // PigeonIMU.GeneralStatus genStat;
   TalonSRX m_pigeon;
   double[] ypr;
-
   ADXRS450_Gyro gyro;
 
   public DriveSubsystem(){ //define variables here
@@ -51,8 +50,6 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     // genStat = new PigeonIMU.GeneralStatus();
     ypr = new double[3];
     gyro = new ADXRS450_Gyro();
-
-
     gyro.calibrate();
     gyro.reset();
   }
@@ -65,9 +62,8 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   public double getYaw(){
     pigeon.getYawPitchRoll(ypr);
     System.out.println("Yaw= " + ypr[0]);
-    return ypr[0];}
-    
-  }
+    return ypr[0];
+  }  
 
   public void resetGyro(){
     gyro.reset();

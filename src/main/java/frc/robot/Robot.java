@@ -18,7 +18,6 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-
   DriveSubsystem drive_subsystem;
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_Subsystem;
@@ -113,7 +112,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick());
+    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 1);
     drive_subsystem.getYaw();
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     print("Encoder position is"+encoder_Subsystem.getPosition());

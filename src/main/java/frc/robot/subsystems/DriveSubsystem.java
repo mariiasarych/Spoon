@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.fasterxml.jackson.annotation.SimpleObjectIdResolver;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.motorcontrol.can.*; //TalonSRX
 
 public class DriveSubsystem extends SubsystemBase { //create variables are here
   private static final int deviceID1 = 1;
@@ -28,6 +31,11 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   SpeedControllerGroup m_left;
   SpeedControllerGroup m_right;
   DifferentialDrive m_drive;
+  PigeonIMU pigeon;
+  // PigeonIMU.GeneralStatus genStat;
+  TalonSRX m_pigeon;
+  double[] ypr;
+
 
   public DriveSubsystem(){ //define variables here
     m_frontLeft = new CANSparkMax(deviceID3, MotorType.kBrushless);
@@ -37,6 +45,10 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     m_left = new SpeedControllerGroup(m_frontLeft, m_backLeft);
     m_right = new SpeedControllerGroup(m_frontRight , m_backRight);
     m_drive = new DifferentialDrive(m_left, m_right);
+    m_pigeon = new WPI_TalonSRX(5);
+    pigeon = new PigeonIMU(m_pigeon); //the pigeon is connected to the TalonSRX(5)
+    // genStat = new PigeonIMU.GeneralStatus();
+    ypr = new double[3];
 
   }
   
@@ -44,5 +56,10 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 
-  
-}
+  public double getYaw(){
+    pigeon.getYawPitchRoll(ypr);
+    System.out.println("Yaw= " + ypr[0]);
+    return ypr[0];}
+    
+  }
+

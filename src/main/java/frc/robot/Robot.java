@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick());
+    drive_subsystem.getYaw();
   }
 
   @Override

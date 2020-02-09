@@ -18,11 +18,11 @@ public class OI extends SubsystemBase {
   }
 
   public double getLeftStick(){ //gets the value of the axis, inverted so forward is 1
-    return -joy.getRawAxis(1);
+    return joy.getRawAxis(1);
   }
 
   public double getRightStick(){ 
-    return -joy.getRawAxis(5);
+    return joy.getRawAxis(5);
   }
 
   public boolean square(){ //gets event of pressing not state

@@ -16,7 +16,6 @@ public EncoderSubsystem(){
     //CANEncoder encoder = new CANEncoder(4);
     m_main = new CANSparkMax(deviceID1, MotorType.kBrushless);
     encoder = new CANEncoder(m_main, EncoderType.kHallSensor, countPerRev);
-
 }
 public double getPosition(){
     return (double)encoder.getPosition();

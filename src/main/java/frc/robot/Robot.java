@@ -6,24 +6,33 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
-
+//Commands & Subsystems
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.*;
+//Individual imports
+
 
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+
   DriveSubsystem drive_subsystem;
+  CameraSubsystem camera_subsystem;
+  EncoderSubsystem encoder_Subsystem;
   OI oi;
+
+  
  
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     drive_subsystem = new DriveSubsystem();
+    camera_subsystem = new CameraSubsystem();
+    encoder_Subsystem = new EncoderSubsystem();
     oi = new OI();
   }
 
@@ -72,6 +81,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    double leftAdjust = -1.0; 
+    double rightAdjust = -1.0; // default speed values for chase
+    double mindistance = 5;
+    leftAdjust -= aimbot();
+    rightAdjust += aimbot();
+     if(Math.abs(camera_subsystem.getTy()) <= mindistance){
+       drive_subsystem.tankDrive(0, 0, 1);
+     }else{
+       if(camera_subsystem.isTarget() == false){
+         drive_subsystem.tankDrive(-.5, .5, .5);
+       }else if((camera_subsystem.isTarget() == true)){
+         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 1);
+         }
+     }
   }
 
   @Override
@@ -92,6 +115,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick());
     drive_subsystem.getYaw();
+    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
+    print("Encoder position is"+encoder_Subsystem.getPosition());
+    print("Encoder velocity is"+encoder_Subsystem.getVelocity());
+  
   }
 
   @Override
@@ -105,5 +132,25 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+  //Other functions
+  public double aimbot() {
+    float kp = -.05f;
+    float minCommand = .005f;
+    float steeringAdjust = 0.05f;
+    //double txEntry = getValue("tx").getDouble(0.0);
+    float tx = (float)camera_subsystem.getTx();
+    //SmartDashboard.setDefaultNumber("TX", tx);
+    float headingError = -tx;
+
+    if(tx > 1) {
+        steeringAdjust = kp*headingError -minCommand;
+    }else if (tx < 1){
+        steeringAdjust = kp*headingError + minCommand;
+    }
+    return steeringAdjust;
+  }
+  public void print(String value){
+    System.out.println(value);
   }
 }

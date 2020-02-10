@@ -10,6 +10,7 @@ services:
 
 before_script:
   - sudo apt-get update
+  - systemctl
 
 script:
   - docker container run --publish 80:80 nginx

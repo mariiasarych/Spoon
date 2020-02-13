@@ -14,36 +14,46 @@ import frc.robot.subsystems.EncoderSubsystem;
 public class DriveForward extends CommandBase {
   DriveSubsystem drive_subsystem;
   EncoderSubsystem encoder_subsysem;
+  double initialPosition;
+  double currentPosition;
+  double distance;
 
-  public DriveForward(DriveSubsystem subsystem, EncoderSubsystem subsystem2) {
+
+  public DriveForward(DriveSubsystem subsystem, EncoderSubsystem subsystem2, double distanceToTravel) {
     drive_subsystem = subsystem;
     encoder_subsysem = subsystem2;
     addRequirements(drive_subsystem);
     addRequirements(encoder_subsysem);
-   //add distance requirement, work with the values first
+    distance = distanceToTravel;
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    //get the initial value of the encoder
+    initialPosition = encoder_subsysem.getPosition();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-//set motors to 1
-//check for curent encoder val
+    currentPosition = encoder_subsysem.getPosition();
+    if (currentPosition - initialPosition == 0){
+      drive_subsystem.tankDrive(1.0, 1.0, 1.0);
+    }
+    else if(currentPosition - initialPosition < distance){
+      drive_subsystem.tankDrive(1.0, 1.0, 1.0);
+    }
   }
 
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
+    drive_subsystem.tankDrive(0.0, 0.0, 0.0);
   }
   
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    return false;
+    return (currentPosition - initialPosition >= distance);
   }
 }

@@ -38,10 +38,10 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   ADXRS450_Gyro gyro;
 
   public DriveSubsystem(){ //define variables here
-    m_frontLeft = new CANSparkMax(deviceID1, MotorType.kBrushless);
-    m_frontRight = new CANSparkMax(deviceID2, MotorType.kBrushless);
+    m_frontLeft = new CANSparkMax(deviceID4, MotorType.kBrushless);
+    m_frontRight = new CANSparkMax(deviceID1, MotorType.kBrushless);
     m_backLeft = new CANSparkMax(deviceID3, MotorType.kBrushless);
-    m_backRight = new CANSparkMax(deviceID4, MotorType.kBrushless);
+    m_backRight = new CANSparkMax(deviceID2, MotorType.kBrushless);
     m_left = new SpeedControllerGroup(m_frontLeft, m_backLeft);
     m_right = new SpeedControllerGroup(m_frontRight , m_backRight);
     m_drive = new DifferentialDrive(m_left, m_right);

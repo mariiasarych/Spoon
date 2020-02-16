@@ -30,10 +30,10 @@ public class TurretSubsystem extends SubsystemBase {
   TalonFX m_shooterRight;
   
   public TurretSubsystem(){
-    m_turret = new TalonSRX(6);
-    m_feeder = new TalonSRX(5); //pigeon in drive subsystem
-    m_shooterLeft = new TalonFX(7);
-    m_shooterRight = new TalonFX(8);
+    m_turret = new TalonSRX(deviceID2);
+    m_feeder = new TalonSRX(deviceID1); //pigeon in drive subsystem
+    m_shooterLeft = new TalonFX(deviceID3);
+    m_shooterRight = new TalonFX(deviceID4);
     boolean _brake = true;
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
     m_shooterRight.setNeutralMode(NeutralMode.Brake);

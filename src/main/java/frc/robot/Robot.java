@@ -22,12 +22,9 @@ public class Robot extends TimedRobot {
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
   OI oi;
-<<<<<<< HEAD
-=======
   double turretVal;
   double turretVal2;
   TurretSubsystem turret_subsystem;
->>>>>>> cd501166fc8fc2d819284ede66261a5ae12455ad
 
   
  

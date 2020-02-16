@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 
 /**
  * Add your docs here.
@@ -30,7 +31,6 @@ public class TurretSubsystem extends SubsystemBase {
     m_feeder = new TalonSRX(5); //pigeon in drive subsystem
     m_shooterLeft = new TalonFX(7);
     m_shooterRight = new TalonFX(8);
-    boolean _brake = true;
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
     m_shooterRight.setNeutralMode(NeutralMode.Brake);
   }
@@ -51,5 +51,19 @@ public class TurretSubsystem extends SubsystemBase {
     return position;
   }
 
-  
+  public void shooter(double speed){
+    if (speed == 0.0){
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput,0.0);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput,0.0);
+    }
+    else{
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*0.5);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*0.5);
+    }
+  }
+
+   public void feeder(double speed){
+      m_feeder.set(ControlMode.PercentOutput,speed);
+    }
+
 }

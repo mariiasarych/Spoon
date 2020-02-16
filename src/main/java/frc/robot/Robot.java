@@ -125,6 +125,8 @@ public class Robot extends TimedRobot {
     turretVal2 = oi.getRightTurretAxis();
     turretVal2 = turretVal - turretVal2;
     turret_subsystem.setTurretSpeed(turretVal2);
+    turret_subsystem.shooter(oi.l1());
+    turret_subsystem.feeder(oi.r1());
   
   }
 

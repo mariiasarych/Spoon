@@ -124,13 +124,14 @@ public class Robot extends TimedRobot {
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 1);
     drive_subsystem.getYaw();
     //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
-    print("Encoder position is"+encoder_subsystem.getPosition());
-    print("Encoder velocity is"+encoder_subsystem.getVelocity());
+    //print("Encoder position is"+encoder_subsystem.getPosition());
+    //print("Encoder velocity is"+encoder_subsystem.getVelocity());
+    print("encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();
     turretVal2 = oi.getRightTurretAxis();
-    turretVal2 = turretVal - turretVal2;
-    turret_subsystem.setTurretSpeed(turretVal2); //Manual movement
+    turretVal2 = turretVal-turretVal2;
     
+    turret_subsystem.setTurretSpeed(turretVal2);
     //Autoaim (toggle)
     if (oi.circle()){
       if (camera_subsystem.isTarget()==false){

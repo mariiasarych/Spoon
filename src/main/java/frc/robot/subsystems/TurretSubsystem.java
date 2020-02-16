@@ -53,7 +53,11 @@ public class TurretSubsystem extends SubsystemBase {
     double position = m_turret.getSelectedSensorPosition(0);
     System.out.println("encoder position " + position);
     return position;
+    //Counter clockwise from hopper is -10000
+    //Clockwise from hopper is 10000
+    //Limit set at ~8000
   }
+
 
   
 }

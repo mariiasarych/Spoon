@@ -17,7 +17,7 @@ import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.sensors.PigeonIMU;  //Pigeon
 import com.ctre.phoenix.motorcontrol.can.*; //TalonSRX
-import edu.wpi.first.wpilibj.ADXRS450_Gyro; //gyro
+// import edu.wpi.first.wpilibj.ADXRS450_Gyro; //gyro
 
 public class DriveSubsystem extends SubsystemBase { //create variables are here
   private static final int deviceID1 = 1;
@@ -35,7 +35,7 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   // PigeonIMU.GeneralStatus genStat;
   TalonSRX m_pigeon;
   double[] ypr;
-  ADXRS450_Gyro gyro;
+  // ADXRS450_Gyro gyro;
 
   public DriveSubsystem(){ //define variables here
     m_frontLeft = new CANSparkMax(deviceID4, MotorType.kBrushless);
@@ -49,14 +49,14 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     pigeon = new PigeonIMU(m_pigeon); //the pigeon is connected to the TalonSRX(5)
     // genStat = new PigeonIMU.GeneralStatus();
     ypr = new double[3];
-    gyro = new ADXRS450_Gyro();
-    gyro.calibrate();
-    gyro.reset();
+  //   gyro = new ADXRS450_Gyro();
+  //   gyro.calibrate();
+  //   gyro.reset();
   }
   
   public void tankDrive(double leftSpeed, double rightSpeed, double modifier){
     m_drive.tankDrive(leftSpeed*modifier, rightSpeed*modifier);
-    double x = gyro.getAngle();
+    // double x = gyro.getAngle();
   }
 
   public double getYaw(){
@@ -65,8 +65,8 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     return ypr[0];
   }  
 
-  public void resetGyro(){
-    gyro.reset();
-  }
+  // public void resetGyro(){
+  //   gyro.reset();
+  // }
   
 }

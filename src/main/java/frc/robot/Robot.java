@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
     turretVal = oi.getLeftTurretAxis();
     turretVal2 = oi.getRightTurretAxis();
     turretVal2 = turretVal-turretVal2;
-    
+
     turret_subsystem.setTurretSpeed(turretVal2);
     //Autoaim (toggle)
     if (oi.circle()){
@@ -142,7 +142,9 @@ public class Robot extends TimedRobot {
       }
       
     }
-  
+    turret_subsystem.shooter(oi.l1());
+    turret_subsystem.feeder(oi.r1());
+    
   }
 
   @Override

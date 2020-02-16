@@ -49,12 +49,24 @@ public class OI extends SubsystemBase {
     return joy.getRawButtonPressed(4);
   }
 
-  public boolean l1(){ 
-    return joy.getRawButtonPressed(5);
+  public double l1(){ //reutrs motor speed value from button, for left shooting falcon
+    double shooterSpeed;
+    if (joy.getRawButton(5)){
+        shooterSpeed = 1.0;}
+        else {
+          shooterSpeed = 0.0;
+        }
+    return shooterSpeed;
   }
 
-  public boolean r1(){ 
-    return joy.getRawButtonPressed(6);
+  public double r1(){ 
+    double feederSpeed;
+    if (joy.getRawButton(6)){
+      feederSpeed = 1.0;}
+      else {
+        feederSpeed = 0.0;
+      }
+  return feederSpeed;
   }
 
   public boolean l2(){ 

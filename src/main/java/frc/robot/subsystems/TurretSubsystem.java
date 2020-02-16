@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 
 /**
  * Add your docs here.
@@ -58,6 +59,19 @@ public class TurretSubsystem extends SubsystemBase {
     //Limit set at ~8000
   }
 
+  public void shooter(double speed){
+    if (speed == 0.0){
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput,0.0);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput,0.0);
+    }
+    else{
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*0.5);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*0.5);
+    }
+  }
 
-  
+   public void feeder(double speed){
+      m_feeder.set(ControlMode.PercentOutput,speed);
+    }
+
 }

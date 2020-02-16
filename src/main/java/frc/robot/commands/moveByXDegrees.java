@@ -29,24 +29,22 @@ public class moveByXDegrees extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret_subsystem.resetTurretEncoder();
-    initialAngle = turret_subsystem.getCurrentAngle(turret_subsystem);
-    System.out.println(initialAngle);
+    initialAngle = turret_subsystem.encoderVal();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    maxAngle = 85; //we need to find the max possible angle
-    minAngle = -85; //we need to find the min possible angle
+    maxAngle = 90; //encoder's values are not yet transformed to degrees
+    minAngle = -90; //encoder's values are not yet transformed to degrees
 
-    currentAngle = turret_subsystem.getCurrentAngle(turret_subsystem);
+    currentAngle = turret_subsystem.encoderVal();
 
-    if (currentAngle < destinationAngle && currentAngle <= maxAngle) {
-      turret_subsystem.setMaxSpeed();
+    if (currentAngle - initialAngle < destinationAngle && currentAngle <= maxAngle) {
+      turret_subsystem.setTurretSpeed(1);
     }
-    else if (currentAngle > destinationAngle && currentAngle >= minAngle) {
-      turret_subsystem.setMinSpeed();
+    else if (currentAngle -initialAngle > destinationAngle && currentAngle >= minAngle) {
+      turret_subsystem.setTurretSpeed(-1);
     }
    
   }
@@ -54,13 +52,14 @@ public class moveByXDegrees extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret_subsystem.m_turret.set(0);
-    System.out.println(currentAngle + " = " + destinationAngle);
+    turret_subsystem.setTurretSpeed(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (currentAngle - initialAngle == destinationAngle);
+    
+    
   }
 }

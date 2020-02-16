@@ -9,26 +9,27 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 /**
  * Add your docs here.
  */
 public class TurretSubsystem extends SubsystemBase {
-  WPI_TalonSRX m_turret;
-  WPI_TalonSRX m_feeder;
-  WPI_TalonFX m_shooterLeft;
-  WPI_TalonFX m_shooterRight;
+  TalonSRX m_turret;
+  TalonSRX m_feeder;
+  TalonFX m_shooterLeft;
+  TalonFX m_shooterRight;
   
   public TurretSubsystem(){
-    m_turret = new WPI_TalonSRX(6);
-    m_feeder = new WPI_TalonSRX(5);
-    m_shooterLeft = new WPI_TalonFX(7);
-    m_shooterRight = new WPI_TalonFX(8);
+    m_turret = new TalonSRX(6);
+    m_feeder = new TalonSRX(5); //pigeon in drive subsystem
+    m_shooterLeft = new TalonFX(7);
+    m_shooterRight = new TalonFX(8);
     boolean _brake = true;
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
     m_shooterRight.setNeutralMode(NeutralMode.Brake);
@@ -41,7 +42,7 @@ public class TurretSubsystem extends SubsystemBase {
     else if (speed < -1) {
       speed = -1;
     }
-    m_turret.set(speed*0.25); 
+    m_turret.set(ControlMode.PercentOutput, speed*0.25); 
   }
 
   public double encoderVal(){ //gets the value of the turret magnetic encoder

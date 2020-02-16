@@ -22,7 +22,8 @@ public class Robot extends TimedRobot {
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
   OI oi;
-  double turretVal, turretVal2;
+  double turretVal;
+  double turretVal2;
   TurretSubsystem turret_subsystem;
 
   
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
     drive_subsystem = new DriveSubsystem();
     camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
+    turret_subsystem = new TurretSubsystem();
     oi = new OI();
   }
 
@@ -119,7 +121,6 @@ public class Robot extends TimedRobot {
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     print("Encoder position is"+encoder_subsystem.getPosition());
     print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    
     turretVal = oi.getLeftTurretAxis();
     turretVal2 = oi.getRightTurretAxis();
     turretVal2 = turretVal - turretVal2;

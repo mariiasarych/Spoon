@@ -15,6 +15,8 @@ public class moveByXDegrees extends CommandBase {
   double initialAngle;
   double currentAngle;
   double destinationAngle;
+  double maxAngle;
+  double minAngle;
   /**
    * Creates a new moveByXDegrees.
    */
@@ -27,6 +29,7 @@ public class moveByXDegrees extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turret_subsystem.resetTurretEncoder();
     initialAngle = turret_subsystem.getCurrentAngle(turret_subsystem);
     System.out.println(initialAngle);
   }
@@ -34,15 +37,16 @@ public class moveByXDegrees extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    maxAngle = 85; //we need to find the max possible angle
+    minAngle = -85; //we need to find the min possible angle
+
     currentAngle = turret_subsystem.getCurrentAngle(turret_subsystem);
-    if (currentAngle < destinationAngle) {
+
+    if (currentAngle < destinationAngle && currentAngle <= maxAngle) {
       turret_subsystem.setMaxSpeed();
     }
-    else if (currentAngle > destinationAngle) {
+    else if (currentAngle > destinationAngle && currentAngle >= minAngle) {
       turret_subsystem.setMinSpeed();
-    }
-    else if (currentAngle == destinationAngle) {
-      turret_subsystem.setTurretSpeed(0);
     }
    
   }

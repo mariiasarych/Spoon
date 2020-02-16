@@ -25,41 +25,37 @@ public class TurretSubsystem extends SubsystemBase {
    * Creates a new TurretSubsystem.
    */
   public TurretSubsystem() {
-    m_turret = new WPI_TalonSRX(1);
-    encoder = new AnalogInput(1);
+    m_turret = new WPI_TalonSRX(6);
+    encoder = new AnalogInput(1); //not the correct port
   }
 
-  // public double maxSpeed (TurretSubsystem turret_subsystem, double speed) {
-  //   if (speed > .25){
-  //     speed = .25;
-  //   }
-  //   else if (speed < -.25){
-  //     speed = -.25;
-  //   }
-  //   maxspeed = speed;
-  //   return maxspeed;
-  // }
-
   public void setMaxSpeed () {
-    m_turret.set(.25);
+    m_turret.set(.20);
   }
   
   public void setMinSpeed () {
-    m_turret.set(-.25);
+    m_turret.set(-.20);
   }
 
-  public void setTurretSpeed (double speed) {
-    speed = speed * .25;
-    m_turret.set (speed);
+  public void setTurretSpeed (double t_speed) {
+    //here must be the formula that would make joystick values go from -.20 to .20
+    if (t_speed > 1){
+      t_speed = 1;
+    }
+    else if (t_speed < -1){
+      t_speed = - 1;
+    }
+    t_speed = t_speed *.20;
+    m_turret.set (t_speed);
   }
 
-  public double getEncoderValue () {
-    encoderValue = encoder.getVoltage();
-    return encoderValue; 
+  public void resetTurretEncoder () { //probably should be in the encoder subsystem
+    encoder.resetAccumulator();
   }
 
   public double getCurrentAngle (TurretSubsystem turret_subsystem){
-    currentAngle = getEncoderValue();
+    //here must be a formula that will ensure that encoder's values are accurate
+    currentAngle = turret_subsystem.encoder.getVoltage();
     return currentAngle;
   }
 

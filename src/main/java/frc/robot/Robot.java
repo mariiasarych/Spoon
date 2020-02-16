@@ -21,9 +21,10 @@ public class Robot extends TimedRobot {
   DriveSubsystem drive_subsystem;
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
+  TurretSubsystem turret_subsystem;
   OI oi;
   double turretVal, turretVal2;
-  TurretSubsystem turret_subsystem;
+  
 
   
  
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
     drive_subsystem = new DriveSubsystem();
     camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
+    turret_subsystem = new TurretSubsystem();
     oi = new OI();
   }
 
@@ -116,14 +118,25 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 1);
     drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
+    //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     print("Encoder position is"+encoder_subsystem.getPosition());
     print("Encoder velocity is"+encoder_subsystem.getVelocity());
     
     turretVal = oi.getLeftTurretAxis();
     turretVal2 = oi.getRightTurretAxis();
     turretVal2 = turretVal - turretVal2;
-    turret_subsystem.setTurretSpeed(turretVal2);
+    turret_subsystem.setTurretSpeed(turretVal2); //Manual movement
+    
+    //Autoaim (toggle)
+    if (oi.circle()){
+      if (camera_subsystem.isTarget()==false){
+        //if there is no target, do nothing
+      }else if((camera_subsystem.isTarget()==true)){
+        double adjust = aimbot();//if there is a target, get the distance from it
+        turret_subsystem.setTurretSpeed(adjust);//set the speed to that distance, left is negative and right is positive
+      }
+      
+    }
   
   }
 
@@ -156,6 +169,7 @@ public class Robot extends TimedRobot {
     }
     return steeringAdjust;
   }
+
   public void print(String value){
     System.out.println(value);
   }

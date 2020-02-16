@@ -19,16 +19,20 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
  * Add your docs here.
  */
 public class TurretSubsystem extends SubsystemBase {
+  private static final int deviceID1 = 5;
+  private static final int deviceID2 = 6;
+  private static final int deviceID3 = 7;
+  private static final int deviceID4 = 8;
   WPI_TalonSRX m_turret;
   WPI_TalonSRX m_feeder;
   WPI_TalonFX m_shooterLeft;
   WPI_TalonFX m_shooterRight;
   
   public TurretSubsystem(){
-    m_turret = new WPI_TalonSRX(6);
-    m_feeder = new WPI_TalonSRX(5);
-    m_shooterLeft = new WPI_TalonFX(7);
-    m_shooterRight = new WPI_TalonFX(8);
+    m_turret = new WPI_TalonSRX(deviceID2);
+    m_feeder = new WPI_TalonSRX(deviceID1);//What are we going to do about the pigeon?
+    m_shooterLeft = new WPI_TalonFX(deviceID3);
+    m_shooterRight = new WPI_TalonFX(deviceID4);
     boolean _brake = true;
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
     m_shooterRight.setNeutralMode(NeutralMode.Brake);

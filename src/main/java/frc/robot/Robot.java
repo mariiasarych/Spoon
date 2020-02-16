@@ -37,6 +37,10 @@ public class Robot extends TimedRobot {
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     oi = new OI();
+
+
+    //settings when the robot turns on
+    camera_subsystem.ledOff();
   }
 
   /**
@@ -87,15 +91,16 @@ public class Robot extends TimedRobot {
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
-    leftAdjust -= aimbot();
+    leftAdjust -= aimbot();//adjust each side according to tx
     rightAdjust += aimbot();
-     if(Math.abs(camera_subsystem.getTy()) <= mindistance){
+
+     if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
      }else{
-       if(camera_subsystem.isTarget() == false){
+       if(camera_subsystem.isTarget() == false){//check if there is target, if not, spin
          drive_subsystem.tankDrive(-.5, .5, .5);
-       }else if((camera_subsystem.isTarget() == true)){
-         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 1);
+       }else if((camera_subsystem.isTarget() == true)){//check if there is target, use adjust values to move
+         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 0.5);
          }
      }
   }

@@ -22,8 +22,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
  * Add your docs here.
  */
 public class IntakeSubsystem extends SubsystemBase {
-  private static final int deviceID1 = 5;
-  private static final int deviceID2 = 6;
+  private static final int deviceID1 = 9;
+  private static final int deviceID2 = 5;
   VictorSPX m_intake;
   VictorSPX m_floor;
   double modifyer = 0.25;

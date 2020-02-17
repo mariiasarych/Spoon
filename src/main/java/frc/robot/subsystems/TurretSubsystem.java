@@ -21,7 +21,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
  * Add your docs here.
  */
 public class TurretSubsystem extends SubsystemBase {
-  private static final int deviceID1 = 5;
+  private static final int deviceID1 = 10;
   private static final int deviceID2 = 6;
   private static final int deviceID3 = 7;
   private static final int deviceID4 = 8;

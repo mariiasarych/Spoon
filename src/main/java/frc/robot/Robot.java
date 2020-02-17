@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
 
 
     //settings when the robot turns on
-    camera_subsystem.ledOff();
+    
   }
 
   /**
@@ -114,6 +114,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    camera_subsystem.ledOff();
   }
 
   /**

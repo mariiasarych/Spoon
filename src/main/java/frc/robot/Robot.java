@@ -127,11 +127,21 @@ public class Robot extends TimedRobot {
     //print("Encoder position is"+encoder_subsystem.getPosition());
     //print("Encoder velocity is"+encoder_subsystem.getVelocity());
     print("encoder pos is" + turret_subsystem.encoderVal());
-    turretVal = oi.getLeftTurretAxis();
+    turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
-    turretVal2 = turretVal-turretVal2;
-
+    if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
+      while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
+        turretVal2 = 0;//reduce right input
+      }
+    }
+    if (turret_subsystem.encoderVal()<=-8000){
+      while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
+        turretVal = 0;//reduce left input
+      }
+    }
+    turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2);
+
     //Autoaim (toggle)
     if (oi.circle()){
       if (camera_subsystem.isTarget()==false){
@@ -142,6 +152,8 @@ public class Robot extends TimedRobot {
       }
       
     }
+    
+
     turret_subsystem.shooter(oi.l1());
     turret_subsystem.feeder(oi.r1());
     

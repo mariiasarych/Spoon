@@ -65,17 +65,12 @@ public class TurretSubsystem extends SubsystemBase {
       m_shooterRight.set(TalonFXControlMode.PercentOutput,0.0);
     }
     else{
-      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*.25);
-      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*.25);
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*1);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*1);
     }
   }
 
   public void feeder(double speed){
       m_feeder.set(ControlMode.PercentOutput,speed);
     }
-
-  public void aimbot(){
-
-  }
-
 }

@@ -35,24 +35,27 @@ public class IntakeSubsystem extends SubsystemBase {
     m_floor = new VictorSPX(deviceID2); //pigeon in drive subsystem
   }
 
-  public void setIntakeSpeed(double speed){ //sets and regulates turret speed
-    if (speed > 1) {
+  public void setIntakeSpeed(boolean button){ //sets and regulates turret speed
+    double speed = 0;
+    double modifyer = 0.5;
+    if (button == true) {
       speed = 1;
     }
-    else if (speed < -1) {
-      speed = -1;
+    else if (button == false) {
+      speed = 0;
     }
-    m_intake.set(ControlMode.PercentOutput, speed* modifyer); 
+    m_intake.set(ControlMode.PercentOutput, speed * modifyer); 
     
   }
-
-  public void setFloorSpeed(double speed){
-    if (speed > 1) {
-        speed = 1;
-      }
-    else if (speed < -1) {
-        speed = -1;
-      }
-    m_floor.set(ControlMode.PercentOutput, speed* modifyer);
+  public void setFloorSpeed(boolean button){ //sets and regulates turret speed
+    double speed = 0;
+    double modifyer = 0.5;
+    if (button == true) {
+      speed = 1;
+    }
+    else if (button == false) {
+      speed = 0;
+    }
+    m_floor.set(ControlMode.PercentOutput, speed * modifyer); 
   }
 }

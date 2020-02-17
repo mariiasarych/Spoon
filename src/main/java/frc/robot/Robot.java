@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
   DriveSubsystem drive_subsystem;
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
+  IntakeSubsystem intake_subsystem;
   OI oi;
   double turretVal;
   double turretVal2;
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
     camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
+    intake_subsystem = new IntakeSubsystem();
     oi = new OI();
 
 
@@ -134,11 +136,13 @@ public class Robot extends TimedRobot {
     if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
       while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
         turretVal2 = 0;//reduce right input
+        print("Above 8000 enc value, turret is"+turretVal2);
       }
     }
     if (turret_subsystem.encoderVal()<=-8000){
       while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
         turretVal = 0;//reduce left input
+        print("Below -8000 enc value, turret is"+turretVal);
       }
     }
     turretVal2 = turretVal-turretVal2;//final calculations
@@ -154,10 +158,13 @@ public class Robot extends TimedRobot {
       }
       
     }
-    
+
     turret_subsystem.shooter(oi.l1());
     turret_subsystem.feeder(oi.r1());
     turret_subsystem.encoderReset(oi.triangle());
+    intake_subsystem.setFloorSpeed(oi.square());
+    intake_subsystem.setIntakeSpeed(oi.x());
+
   }
 
   @Override

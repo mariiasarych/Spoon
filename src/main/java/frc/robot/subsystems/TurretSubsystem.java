@@ -32,7 +32,7 @@ public class TurretSubsystem extends SubsystemBase {
   
   public TurretSubsystem(){
     m_feeder = new TalonSRX(deviceID1); //pigeon in drive subsystem
-    m_turret = new TalonSRX(deviceID2);
+    m_turret = new TalonSRX(deviceID2); //magnetic encoder here
     m_shooterLeft = new TalonFX(deviceID3);
     m_shooterRight = new TalonFX(deviceID4);
     boolean _brake = true;
@@ -59,7 +59,11 @@ public class TurretSubsystem extends SubsystemBase {
     //Limit set at ~8000
   }
   public void encoderReset(boolean button){
+    if (button==true){
     m_turret.setSelectedSensorPosition(0);
+    }else{
+      
+    }
   }
   public void shooter(double speed){
     if (speed == 0.0){

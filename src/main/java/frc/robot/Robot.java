@@ -157,7 +157,12 @@ public class Robot extends TimedRobot {
 
     turret_subsystem.shooter(oi.l1());
     turret_subsystem.feeder(oi.r1());
+<<<<<<< HEAD
     
+=======
+    turret_subsystem.shooterEncoder();
+  
+>>>>>>> fe90525186a509ece4380aefe2007083367ee416
   }
 
   @Override

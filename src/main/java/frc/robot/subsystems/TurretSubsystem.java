@@ -11,24 +11,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+
 
 /**
  * Add your docs here.
  */
 public class TurretSubsystem extends SubsystemBase {
   TalonSRX m_turret;
-  TalonSRX m_feeder;
+  VictorSPX m_feeder;
   TalonFX m_shooterLeft;
   TalonFX m_shooterRight;
   
   public TurretSubsystem(){
     m_turret = new TalonSRX(6);
-    m_feeder = new TalonSRX(5); //pigeon in drive subsystem
+    m_feeder = new VictorSPX(10);
     m_shooterLeft = new TalonFX(7);
     m_shooterRight = new TalonFX(8);
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
@@ -60,6 +63,10 @@ public class TurretSubsystem extends SubsystemBase {
       m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*0.5);
       m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*0.5);
     }
+  }
+
+  public void shooterEncoder(){
+    System.out.println(m_shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor));
   }
 
    public void feeder(double speed){

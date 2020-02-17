@@ -127,6 +127,7 @@ public class Robot extends TimedRobot {
     turret_subsystem.setTurretSpeed(turretVal2);
     turret_subsystem.shooter(oi.l1());
     turret_subsystem.feeder(oi.r1());
+    turret_subsystem.shooterEncoder();
   
   }
 

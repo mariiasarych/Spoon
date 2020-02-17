@@ -50,7 +50,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   public double encoderVal(){ //gets the value of the turret magnetic encoder
     double position = m_turret.getSelectedSensorPosition(0);
-    System.out.println("encoder position " + position);
+    // System.out.println("encoder position " + position);
     return position;
   }
 
@@ -60,13 +60,14 @@ public class TurretSubsystem extends SubsystemBase {
       m_shooterRight.set(TalonFXControlMode.PercentOutput,0.0);
     }
     else{
-      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*0.5);
-      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*0.5);
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed);
     }
   }
 
   public void shooterEncoder(){
-    System.out.println(m_shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor));
+    m_shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    m_shooterRight.getSelectedSensorVelocity();
   }
 
    public void feeder(double speed){

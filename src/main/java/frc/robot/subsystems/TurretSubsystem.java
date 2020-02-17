@@ -11,29 +11,31 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-
 
 /**
  * Add your docs here.
  */
 public class TurretSubsystem extends SubsystemBase {
+  private static final int deviceID1 = 10;
+  private static final int deviceID2 = 6;
+  private static final int deviceID3 = 7;
+  private static final int deviceID4 = 8;
   TalonSRX m_turret;
-  VictorSPX m_feeder;
+  TalonSRX m_feeder;
   TalonFX m_shooterLeft;
   TalonFX m_shooterRight;
   
   public TurretSubsystem(){
-    m_turret = new TalonSRX(6);
-    m_feeder = new VictorSPX(10);
-    m_shooterLeft = new TalonFX(7);
-    m_shooterRight = new TalonFX(8);
+    m_feeder = new TalonSRX(deviceID1); //pigeon in drive subsystem
+    m_turret = new TalonSRX(deviceID2);
+    m_shooterLeft = new TalonFX(deviceID3);
+    m_shooterRight = new TalonFX(deviceID4);
+    boolean _brake = true;
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
     m_shooterRight.setNeutralMode(NeutralMode.Brake);
   }
@@ -52,25 +54,25 @@ public class TurretSubsystem extends SubsystemBase {
     double position = m_turret.getSelectedSensorPosition(0);
     System.out.println("encoder position " + position);
     return position;
+    //Counter clockwise from hopper is -10000
+    //Clockwise from hopper is 10000
+    //Limit set at ~8000
   }
-
+  public void encoderReset(boolean button){
+    m_turret.setSelectedSensorPosition(0);
+  }
   public void shooter(double speed){
     if (speed == 0.0){
       m_shooterLeft.set(TalonFXControlMode.PercentOutput,0.0);
       m_shooterRight.set(TalonFXControlMode.PercentOutput,0.0);
     }
     else{
-      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*0.5);
-      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*0.5);
+      m_shooterLeft.set(TalonFXControlMode.PercentOutput, -speed*1);
+      m_shooterRight.set(TalonFXControlMode.PercentOutput, speed*1);
     }
   }
 
-  public void shooterEncoder(){
-    System.out.println(m_shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor));
-  }
-
-   public void feeder(double speed){
+  public void feeder(double speed){
       m_feeder.set(ControlMode.PercentOutput,speed);
     }
-
 }

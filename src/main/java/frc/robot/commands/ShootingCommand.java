@@ -20,9 +20,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 
 public class ShootingCommand extends CommandBase {
-  TalonSRX m_feeder;
-  TalonFX m_shooterLeft;
-  TalonFX m_shooterRight;
   Timer timer;
   private final TurretSubsystem turret_subsystem;
 
@@ -30,22 +27,15 @@ public class ShootingCommand extends CommandBase {
   public ShootingCommand(TurretSubsystem subsystem) {
     turret_subsystem = subsystem;
     addRequirements(turret_subsystem);
-   m_feeder = new TalonSRX(5);
-   m_shooterLeft = new WPI_TalonFX(1);
-   m_shooterRight = new WPI_TalonFX(2);
-   m_shooterLeft.setNeutralMode(NeutralMode.Brake);
-   m_shooterRight.setNeutralMode(NeutralMode.Brake);
-   timer = new Timer();
+    timer = new Timer();
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
    
-    timer.start();//make timer be smth get old code, stephon showed me what to do before
-    
-    m_shooterLeft.set(TalonFXControlMode.PercentOutput,-0.75);
-    m_shooterRight.set(TalonFXControlMode.PercentOutput,0.75);
+    timer.start();
+    turret_subsystem.shooter(1.0);
     //set shooter motor to desired max
 
   }
@@ -54,10 +44,8 @@ public class ShootingCommand extends CommandBase {
   @Override
   public void execute() {
    if(timer.get() >= 1){
-    m_shooterLeft.set(TalonFXControlMode.PercentOutput,-0.75);
-    m_shooterRight.set(TalonFXControlMode.PercentOutput,0.75);
-    m_feeder.set(ControlMode.PercentOutput, -0.75);}
-    System.out.println("time " + timer.get());
+    turret_subsystem.shooter(1.0);
+    turret_subsystem.feeder(1.0); }
     
 
 
@@ -70,9 +58,8 @@ public class ShootingCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     //set all 3 motors to zero
-    m_shooterLeft.set(TalonFXControlMode.PercentOutput,0.0);
-    m_shooterRight.set(TalonFXControlMode.PercentOutput,0.0);
-    m_feeder.set(ControlMode.PercentOutput,0.0);
+    turret_subsystem.shooter(0.0);
+    turret_subsystem.feeder(0.0);
 
   }
 

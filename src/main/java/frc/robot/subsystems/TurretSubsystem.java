@@ -76,10 +76,6 @@ public class TurretSubsystem extends SubsystemBase {
     }
   }
 
-  public void shooterEncoder(){
-    m_shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    m_shooterRight.getSelectedSensorVelocity();
-  }
 
    public void feeder(double speed){
       m_feeder.set(ControlMode.PercentOutput,speed);

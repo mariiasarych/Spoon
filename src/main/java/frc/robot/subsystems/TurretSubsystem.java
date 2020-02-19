@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -26,12 +27,12 @@ public class TurretSubsystem extends SubsystemBase {
   private static final int deviceID3 = 7;
   private static final int deviceID4 = 8;
   TalonSRX m_turret;
-  TalonSRX m_feeder;
+  VictorSPX m_feeder;
   TalonFX m_shooterLeft;
   TalonFX m_shooterRight;
   
   public TurretSubsystem(){
-    m_feeder = new TalonSRX(deviceID1); //pigeon in drive subsystem
+    m_feeder = new VictorSPX(deviceID1); //pigeon in drive subsystem
     m_turret = new TalonSRX(deviceID2); //magnetic encoder here
     m_shooterLeft = new TalonFX(deviceID3);
     m_shooterRight = new TalonFX(deviceID4);

@@ -21,8 +21,10 @@ public class Robot extends TimedRobot {
   DriveSubsystem drive_subsystem;
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
+  IntakeSubsystem intake_subsystem;
   OI oi;
-  double turretVal, turretVal2;
+  double turretVal;
+  double turretVal2;
   TurretSubsystem turret_subsystem;
 
   
@@ -34,7 +36,13 @@ public class Robot extends TimedRobot {
     drive_subsystem = new DriveSubsystem();
     camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
+    turret_subsystem = new TurretSubsystem();
+    intake_subsystem = new IntakeSubsystem();
     oi = new OI();
+
+
+    //settings when the robot turns on
+    
   }
 
   /**
@@ -85,15 +93,16 @@ public class Robot extends TimedRobot {
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
-    leftAdjust -= aimbot();
+    leftAdjust -= aimbot();//adjust each side according to tx
     rightAdjust += aimbot();
-     if(Math.abs(camera_subsystem.getTy()) <= mindistance){
+
+     if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
      }else{
-       if(camera_subsystem.isTarget() == false){
+       if(camera_subsystem.isTarget() == false){//check if there is target, if not, spin
          drive_subsystem.tankDrive(-.5, .5, .5);
-       }else if((camera_subsystem.isTarget() == true)){
-         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 1);
+       }else if((camera_subsystem.isTarget() == true)){//check if there is target, use adjust values to move
+         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 0.5);
          }
      }
   }
@@ -107,6 +116,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    camera_subsystem.ledOff();
+
   }
 
   /**
@@ -116,15 +127,44 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 1);
     drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
-    print("Encoder position is"+encoder_subsystem.getPosition());
-    print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    
-    turretVal = oi.getLeftTurretAxis();
+    //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
+    //print("Encoder position is"+encoder_subsystem.getPosition());
+    //print("Encoder velocity is"+encoder_subsystem.getVelocity());
+    print("encoder pos is" + turret_subsystem.encoderVal());
+    turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
-    turretVal2 = turretVal - turretVal2;
+    if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
+      while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
+        turretVal2 = 0;//reduce right input
+        print("Above 8000 enc value, turret is"+turretVal2);
+      }
+    }
+    if (turret_subsystem.encoderVal()<=-8000){
+      while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
+        turretVal = 0;//reduce left input
+        print("Below -8000 enc value, turret is"+turretVal);
+      }
+    }
+    turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2);
-  
+
+    //Autoaim (toggle)
+    if (oi.circle()){
+      if (camera_subsystem.isTarget()==false){
+        //if there is no target, do nothing
+      }else if((camera_subsystem.isTarget()==true)){
+        double adjust = aimbot();//if there is a target, get the distance from it
+        turret_subsystem.setTurretSpeed(adjust);//set the speed to that distance, left is negative and right is positive
+      }
+      
+    }
+
+    turret_subsystem.shooter(oi.l1());
+    turret_subsystem.feeder(oi.r1());
+    turret_subsystem.encoderReset(oi.triangle());
+    intake_subsystem.setFloorSpeed(oi.square());
+    intake_subsystem.setIntakeSpeed(oi.x());
+
   }
 
   @Override
@@ -156,6 +196,7 @@ public class Robot extends TimedRobot {
     }
     return steeringAdjust;
   }
+
   public void print(String value){
     System.out.println(value);
   }

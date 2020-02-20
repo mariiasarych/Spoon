@@ -46,6 +46,9 @@ public class CameraSubsystem extends SubsystemBase {
 
     }
 
+	public void ledOff(){
+		setLedMode(LightMode.eOff);
+	}
 
 	/**
 	 * Gets whether a target is detected by the Limelight.

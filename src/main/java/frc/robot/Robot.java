@@ -210,8 +210,12 @@ public class Robot extends TimedRobot {
     float KpDist = -0.1f;
     float ty = (float)camera_subsystem.getTy();
     float distance_error = -ty;
-
     float distance_adjust = distance_error*KpDist;
+    if (distance_adjust > 1){
+      distance_adjust = 1;
+    }else if(distance_adjust <-1){
+      distance_adjust = -1;
+    }
 
     return distance_adjust;
   }

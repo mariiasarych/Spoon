@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 //Commands & Subsystems
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +28,9 @@ public class Robot extends TimedRobot {
   double turretVal;
   double turretVal2;
   TurretSubsystem turret_subsystem;
+  private boolean m_LimelightHasValidTarget = false;
+  private double m_LimelightDriveCommand = 0.0;
+  private double m_LimelightSteerCommand = 0.0;
 
   
  
@@ -93,8 +98,8 @@ public class Robot extends TimedRobot {
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
-    leftAdjust -= aimbot();//adjust each side according to tx
-    rightAdjust += aimbot();
+    leftAdjust -= steeringAdjust();//adjust each side according to tx
+    rightAdjust += steeringAdjust();
 
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
@@ -117,6 +122,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     camera_subsystem.ledOff();
+    boolean m_LimelightHasValidTarget;
 
   }
 
@@ -133,6 +139,7 @@ public class Robot extends TimedRobot {
     print("encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
+    /*
     if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
       while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
         turretVal2 = 0;//reduce right input
@@ -145,15 +152,18 @@ public class Robot extends TimedRobot {
         print("Below -8000 enc value, turret is"+turretVal);
       }
     }
+    */
     turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2);
-
+    
     //Autoaim (toggle)
     if (oi.circle()){
       if (camera_subsystem.isTarget()==false){
         //if there is no target, do nothing
       }else if((camera_subsystem.isTarget()==true)){
-        double adjust = aimbot();//if there is a target, get the distance from it
+        double adjust = steeringAdjust();//if there is a target, get the horizontal distance(X) from it
+        double distAdjust = distanceAdjust();//if there is a target get the vertical distance from it
+        drive_subsystem.tankDrive(distAdjust, -distAdjust, 0.5);//tank drive according to returned variables
         turret_subsystem.setTurretSpeed(adjust);//set the speed to that distance, left is negative and right is positive
       }
       
@@ -180,15 +190,14 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   //Other functions
-  public double aimbot() {
+  public double steeringAdjust() {
     float kp = -.05f;
     float minCommand = .005f;
     float steeringAdjust = 0.05f;
-    //double txEntry = getValue("tx").getDouble(0.0);
     float tx = (float)camera_subsystem.getTx();
     //SmartDashboard.setDefaultNumber("TX", tx);
     float headingError = -tx;
-
+  
     if(tx > 1) {
         steeringAdjust = kp*headingError -minCommand;
     }else if (tx < 1){
@@ -197,7 +206,41 @@ public class Robot extends TimedRobot {
     return steeringAdjust;
   }
 
+  public double distanceAdjust(){
+    float KpDist = -0.1f;
+    float ty = (float)camera_subsystem.getTy();
+    float distance_error = -ty;
+
+    float distance_adjust = distance_error*KpDist;
+
+    return distance_adjust;
+  }
+  /*
+  
+if (joystick->GetRawButton(9))
+{
+        float heading_error = -tx;
+        float distance_error = -ty;
+        float steering_adjust = 0.0f;
+
+        if (tx > 1.0)
+        {
+                steering_adjust = KpAim*heading_error - min_aim_command;
+        }
+        else if (tx < 1.0)
+        {
+                steering_adjust = KpAim*heading_error + min_aim_command;
+        }
+
+        float distance_adjust = KpDistance * distance_error;
+
+        left_command += steering_adjust + distance_adjust;
+        right_command -= steering_adjust + distance_adjust;
+}
+  */
+
   public void print(String value){
     System.out.println(value);
   }
+  
 }

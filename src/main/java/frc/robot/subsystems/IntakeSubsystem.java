@@ -37,25 +37,25 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setIntakeSpeed(boolean button){ //sets and regulates turret speed
     double speed = 0;
-    double modifyer = 0.5;
+    double modifier = 0.5;
     if (button == true) {
       speed = 1;
     }
     else if (button == false) {
       speed = 0;
     }
-    m_intake.set(ControlMode.PercentOutput, speed * modifyer); 
+    m_intake.set(ControlMode.PercentOutput, speed * modifier); 
     
   }
   public void setFloorSpeed(boolean button){ //sets and regulates turret speed
     double speed = 0;
-    double modifyer = 0.5;
+    double modifier = 0.5;
     if (button == true) {
       speed = 1;
     }
     else if (button == false) {
       speed = 0;
     }
-    m_floor.set(ControlMode.PercentOutput, speed * modifyer); 
+    m_floor.set(ControlMode.PercentOutput, speed * modifier); 
   }
 }

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.EncoderSubsystem;
 
-public class DriveForward extends CommandBase {
+public class DriveBackward extends CommandBase {
   DriveSubsystem drive_subsystem;
   EncoderSubsystem encoder_subsysem;
   double initialPosition;
@@ -19,7 +19,7 @@ public class DriveForward extends CommandBase {
   double distance;
 
 
-  public DriveForward(DriveSubsystem subsystem, EncoderSubsystem subsystem2, double distanceToTravel) {
+  public DriveBackward(DriveSubsystem subsystem, EncoderSubsystem subsystem2, double distanceToTravel) {
     drive_subsystem = subsystem;
     encoder_subsysem = subsystem2;
     addRequirements(drive_subsystem);
@@ -38,10 +38,10 @@ public class DriveForward extends CommandBase {
   public void execute() {
     currentPosition = encoder_subsysem.getPosition();
     if (currentPosition - initialPosition == 0){
-      drive_subsystem.tankDrive(1.0, 1.0, 0.95);
+      drive_subsystem.tankDrive(-1.0, -1.0, 0.95);
     }
-    else if(currentPosition - initialPosition < distance){
-      drive_subsystem.tankDrive(1.0, 1.0, 0.95);
+    else if(currentPosition - initialPosition > distance){
+      drive_subsystem.tankDrive(-1.0, -1.0, 0.95);
     }
     
   }
@@ -55,6 +55,6 @@ public class DriveForward extends CommandBase {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    return (currentPosition - initialPosition >= distance);
+    return (currentPosition - initialPosition <= distance);
   }
 }

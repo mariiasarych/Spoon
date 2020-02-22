@@ -8,10 +8,15 @@
 package frc.robot;
 //Commands & Subsystems
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 //Individual imports
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 
 
@@ -21,12 +26,15 @@ public class Robot extends TimedRobot {
   DriveSubsystem drive_subsystem;
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
-  IntakeSubsystem intake_subsystem;
   OI oi;
+  TurretSubsystem turret_subsystem;
+  ShootingCommand shooting_command;
+  IntakeSubsystem intake_subsystem;
   double turretVal;
   double turretVal2;
-  TurretSubsystem turret_subsystem;
-
+  JoystickButton btn;
+  DriveForward drive_forward;
+  DriveBackward drive_backward;
   
  
 
@@ -39,6 +47,8 @@ public class Robot extends TimedRobot {
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
     oi = new OI();
+    btn = new JoystickButton(oi.getController(), 5);
+   
 
 
     //settings when the robot turns on
@@ -83,6 +93,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    // some autonomus to test in the future
+    // new DriveForward(drive_subsystem, encoder_subsystem, 2);
+    // new DriveBackward(drive_subsystem, encoder_subsystem, 4);
   }
 
   /**
@@ -118,6 +131,7 @@ public class Robot extends TimedRobot {
     }
     camera_subsystem.ledOff();
 
+    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8));
   }
 
   /**
@@ -125,7 +139,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 1);
+    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 0.95);
     drive_subsystem.getYaw();
     //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     //print("Encoder position is"+encoder_subsystem.getPosition());
@@ -146,7 +160,7 @@ public class Robot extends TimedRobot {
       }
     }
     turretVal2 = turretVal-turretVal2;//final calculations
-    turret_subsystem.setTurretSpeed(turretVal2);
+    turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
     //Autoaim (toggle)
     if (oi.circle()){
@@ -154,16 +168,18 @@ public class Robot extends TimedRobot {
         //if there is no target, do nothing
       }else if((camera_subsystem.isTarget()==true)){
         double adjust = aimbot();//if there is a target, get the distance from it
-        turret_subsystem.setTurretSpeed(adjust);//set the speed to that distance, left is negative and right is positive
+        turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
       }
       
     }
 
-    turret_subsystem.shooter(oi.l1());
     turret_subsystem.feeder(oi.r1());
     turret_subsystem.encoderReset(oi.triangle());
-    intake_subsystem.setFloorSpeed(oi.square());
-    intake_subsystem.setIntakeSpeed(oi.x());
+    intake_subsystem.setFloorSpeed(-oi.square());
+    intake_subsystem.setIntakeSpeed(-oi.x());
+    encoder_subsystem.getPosition();
+    encoder_subsystem.getVelocity();
+    // turret_subsystem.shooterEncoder();
 
   }
 

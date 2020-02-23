@@ -15,6 +15,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -27,24 +29,25 @@ public class TurretSubsystem extends SubsystemBase {
   VictorSPX m_feeder;
   TalonFX m_shooterLeft;
   TalonFX m_shooterRight;
-  double turLeftLimit;
-  double turRightLimit;
+  double turLeftLimit= -7000;
+  double turRightLimit = 7000;
   
   public TurretSubsystem(){
     m_feeder = new VictorSPX(10); //pigeon in drive subsystem
     m_turret = new TalonSRX(6);
     m_shooterLeft = new TalonFX(7);
     m_shooterRight = new TalonFX(8);
-    boolean _brake = true;
+    // boolean _brake = true;
     m_shooterLeft.setNeutralMode(NeutralMode.Brake);
     m_shooterRight.setNeutralMode(NeutralMode.Brake);
     m_feeder.setNeutralMode(NeutralMode.Coast);
   }
 
-  public double encoderVal(){ //gets the value of the turret magnetic encoder
-    double position = m_turret.getSelectedSensorPosition(0);
-    System.out.println("turret encoder value " + position);
-    return position;
+  public double encoderVal(){ //gets the raw values of the turret magnetic encoder
+    // double position = m_turret.getSelectedSensorPosition(0);
+    // SmartDashboard.putString("turret encoder value " ,  m_turret.getSelectedSensorPosition());
+    System.out.println("turret encoder value " +  m_turret.getSelectedSensorPosition());
+    return  m_turret.getSelectedSensorPosition();
     //Counter clockwise from hopper is -10000
     //Clockwise from hopper is 10000
     //Limit set at ~8000
@@ -66,15 +69,15 @@ public class TurretSubsystem extends SubsystemBase {
       modifier = 0;
     }
      //turning limits
-    // if (encoderVal()<=turLeftLimit){
-    //   m_turret.set(ControlMode.PercentOutput, 0.0); //move to right
-    // }
-    // else if(encoderVal()>=turRightLimit){
-    //   m_turret.set(ControlMode.PercentOutput, 0.0); //move to left
-    // }
-    // else if (encoderVal()>turLeftLimit && encoderVal()<turRightLimit){
+    if (encoderVal()<=turLeftLimit){
+      m_turret.set(ControlMode.PercentOutput, 0.1); //move to right
+    }
+    else if(encoderVal()>=turRightLimit){
+      m_turret.set(ControlMode.PercentOutput, -0.1); //move to left
+    }
+    else if (encoderVal()>turLeftLimit && encoderVal()<turRightLimit){
     m_turret.set(ControlMode.PercentOutput, -speed* modifier); 
-    //}
+    }
   }
   
   public void encoderReset(boolean button){
@@ -92,7 +95,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public double shooterEncoder(){
-    System.out.println("shooter encoder"+  m_shooterRight.getSelectedSensorVelocity());
+    // System.out.println("shooter encoder"+  m_shooterRight.getSelectedSensorVelocity());
     return m_shooterRight.getSelectedSensorVelocity();
   }
 

@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
     }
     camera_subsystem.ledOff();
 
-    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8));
+    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8, 14000));
   }
 
   /**
@@ -148,24 +148,23 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive_subsystem.tankDrive(oi.driveGetLeftStick(), oi.driveGetRightStick(), 0.95);
     drive_subsystem.getYaw();
-    //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     //print("Encoder position is"+encoder_subsystem.getPosition());
     //print("Encoder velocity is"+encoder_subsystem.getVelocity());
     // print("turret encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
-    if (turret_subsystem.encoderVal()>=7000){//If the encoder value is greater than 8000, do this
-      while ((turret_subsystem.encoderVal()>=7000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
-        turretVal2 = 0;//reduce right input
-        print("Above 7000 enc value, turret is"+turretVal2);
-      }
-    }
-    if (turret_subsystem.encoderVal()<=-7000){
-      while ((turret_subsystem.encoderVal()<=-7000)&&(turretVal2<=-.1)){
-        turretVal = 0;//reduce left input
-        print("Below -7000 enc value, turret is"+turretVal);
-      }
-    }
+    // if (turret_subsystem.encoderVal()>=7000){//If the encoder value is greater than 8000, do this
+    //   while ((turret_subsystem.encoderVal()>=7000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
+    //     turretVal2 = 0;//reduce right input
+    //     print("Above 7000 enc value, turret is"+turretVal2);
+    //   }
+    // }
+    // if (turret_subsystem.encoderVal()<=-7000){
+    //   while ((turret_subsystem.encoderVal()<=-7000)&&(turretVal2<=-.1)){
+    //     turretVal = 0;//reduce left input
+    //     print("Below -7000 enc value, turret is"+turretVal);
+    //   }
+    // }
     turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
@@ -184,8 +183,8 @@ public class Robot extends TimedRobot {
     turret_subsystem.encoderReset(oi.triangle());
     intake_subsystem.setFloorSpeed(-oi.square());
     intake_subsystem.setIntakeSpeed(-oi.x());
-    encoder_subsystem.getPosition();
-    encoder_subsystem.getVelocity();
+    // encoder_subsystem.getPosition();    
+    // encoder_subsystem.getVelocity();
     turret_subsystem.encoderVal(); //turret encoder
     // turret_subsystem.shooterEncoder();
 

@@ -36,7 +36,7 @@ public class TurnLeft extends CommandBase {
   @Override
   public void execute() {
     pigeonVal= drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(-1.0, 1.0, 1.0);
+    drive_subsystem.tankDrive(-1.0, 1.0, 0.5);
     
 
   }
@@ -44,7 +44,7 @@ public class TurnLeft extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive_subsystem.tankDrive(0.0, 0.0, 1.0);
+    drive_subsystem.tankDrive(0.0, 0.0, 0.5);
   }
 
   // Returns true when the command should end.

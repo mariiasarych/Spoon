@@ -17,6 +17,7 @@ public class DriveBackward extends CommandBase {
   double initialPosition;
   double currentPosition;
   double distance;
+  double mod = 0.5;
 
 
   public DriveBackward(DriveSubsystem subsystem, EncoderSubsystem subsystem2, double distanceToTravel) {
@@ -38,10 +39,10 @@ public class DriveBackward extends CommandBase {
   public void execute() {
     currentPosition = encoder_subsysem.getPosition();
     if (currentPosition - initialPosition == 0){
-      drive_subsystem.tankDrive(-1.0, -1.0, 0.95);
+      drive_subsystem.tankDrive(-1.0, -1.0, mod);
     }
     else if(currentPosition - initialPosition > distance){
-      drive_subsystem.tankDrive(-1.0, -1.0, 0.95);
+      drive_subsystem.tankDrive(-1.0, -1.0, mod);
     }
     
   }
@@ -49,7 +50,7 @@ public class DriveBackward extends CommandBase {
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    drive_subsystem.tankDrive(0.0, 0.0, 0.95);
+    drive_subsystem.tankDrive(0.0, 0.0, mod);
   }
   
   // Make this return true when this Command no longer needs to run execute()

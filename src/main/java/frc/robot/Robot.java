@@ -20,21 +20,27 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot {  
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  //commands
+  DriveForward drive_forward;
+  DriveBackward drive_backward;
+  TurnLeft turn_left;
+  TurnRight turn_right;
+  ShootingCommand shooting_command;
+  //Autonomus1 autonomus1;
+  //subsystem
   DriveSubsystem drive_subsystem;
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
   OI oi;
   TurretSubsystem turret_subsystem;
-  ShootingCommand shooting_command;
   IntakeSubsystem intake_subsystem;
+  //variables
   double turretVal;
   double turretVal2;
   JoystickButton btn;
-  DriveForward drive_forward;
-  DriveBackward drive_backward;
   
  
 
@@ -48,6 +54,7 @@ public class Robot extends TimedRobot {
     intake_subsystem = new IntakeSubsystem();
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
+    // autonomus1 = new Autonomus1();
    
 
 
@@ -93,9 +100,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    // some autonomus to test in the future
-    // new DriveForward(drive_subsystem, encoder_subsystem, 2);
-    // new DriveBackward(drive_subsystem, encoder_subsystem, 4);
+    // some autonomus to test
+    // autonomus1.schedule();
+    
   }
 
   /**
@@ -139,24 +146,24 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 0.95);
+    drive_subsystem.tankDrive(oi.driveGetLeftStick(), oi.driveGetRightStick(), 0.95);
     drive_subsystem.getYaw();
     //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     //print("Encoder position is"+encoder_subsystem.getPosition());
     //print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    print("encoder pos is" + turret_subsystem.encoderVal());
+    // print("turret encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
-    if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
-      while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
+    if (turret_subsystem.encoderVal()>=7000){//If the encoder value is greater than 8000, do this
+      while ((turret_subsystem.encoderVal()>=7000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
         turretVal2 = 0;//reduce right input
-        print("Above 8000 enc value, turret is"+turretVal2);
+        print("Above 7000 enc value, turret is"+turretVal2);
       }
     }
-    if (turret_subsystem.encoderVal()<=-8000){
-      while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
+    if (turret_subsystem.encoderVal()<=-7000){
+      while ((turret_subsystem.encoderVal()<=-7000)&&(turretVal2<=-.1)){
         turretVal = 0;//reduce left input
-        print("Below -8000 enc value, turret is"+turretVal);
+        print("Below -7000 enc value, turret is"+turretVal);
       }
     }
     turretVal2 = turretVal-turretVal2;//final calculations
@@ -179,6 +186,7 @@ public class Robot extends TimedRobot {
     intake_subsystem.setIntakeSpeed(-oi.x());
     encoder_subsystem.getPosition();
     encoder_subsystem.getVelocity();
+    turret_subsystem.encoderVal(); //turret encoder
     // turret_subsystem.shooterEncoder();
 
   }

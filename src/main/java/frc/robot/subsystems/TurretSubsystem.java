@@ -27,6 +27,8 @@ public class TurretSubsystem extends SubsystemBase {
   VictorSPX m_feeder;
   TalonFX m_shooterLeft;
   TalonFX m_shooterRight;
+  double turLeftLimit;
+  double turRightLimit;
   
   public TurretSubsystem(){
     m_feeder = new VictorSPX(10); //pigeon in drive subsystem
@@ -39,30 +41,42 @@ public class TurretSubsystem extends SubsystemBase {
     m_feeder.setNeutralMode(NeutralMode.Coast);
   }
 
+  public double encoderVal(){ //gets the value of the turret magnetic encoder
+    double position = m_turret.getSelectedSensorPosition(0);
+    System.out.println("turret encoder value " + position);
+    return position;
+    //Counter clockwise from hopper is -10000
+    //Clockwise from hopper is 10000
+    //Limit set at ~8000
+  }
+
   public void setTurretSpeed(double speed, double modifier){ //sets and regulates turret speed
+    //speed limits
     if (speed > 1) {
       speed = 1;
     }
     else if (speed < -1) {
       speed = -1;
     }
-
+    //modifier limits
     if (modifier > 1) {
       modifier = 1;
     }
     else if (modifier < 0) {
       modifier = 0;
     }
+     //turning limits
+    // if (encoderVal()<=turLeftLimit){
+    //   m_turret.set(ControlMode.PercentOutput, 0.0); //move to right
+    // }
+    // else if(encoderVal()>=turRightLimit){
+    //   m_turret.set(ControlMode.PercentOutput, 0.0); //move to left
+    // }
+    // else if (encoderVal()>turLeftLimit && encoderVal()<turRightLimit){
     m_turret.set(ControlMode.PercentOutput, -speed* modifier); 
+    //}
   }
-
-  public double encoderVal(){ //gets the value of the turret magnetic encoder
-    double position = m_turret.getSelectedSensorPosition(0);
-    return position;
-    //Counter clockwise from hopper is -10000
-    //Clockwise from hopper is 10000
-    //Limit set at ~8000
-  }
+  
   public void encoderReset(boolean button){
     m_turret.setSelectedSensorPosition(0);
   }

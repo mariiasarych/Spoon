@@ -17,11 +17,11 @@ public EncoderSubsystem(){
     m_main = new CANSparkMax(deviceID1, MotorType.kBrushless);
     encoder = new CANEncoder(m_main, EncoderType.kHallSensor, countPerRev);
 }
-public double getPosition(){
-    System.out.println("drive encoder position" + encoder.getPosition()/(-4.87));
+public double getPosition(){ //drive encoder
+    // System.out.println("drive encoder position" + encoder.getPosition()/(-4.87));
     return (double)encoder.getPosition()/(-4.87);
 }
-public double getVelocity(){
+public double getVelocity(){ //drive encoder
     System.out.println("drive encoder velocity" + encoder.getVelocity());
     return (double)encoder.getVelocity();
 }

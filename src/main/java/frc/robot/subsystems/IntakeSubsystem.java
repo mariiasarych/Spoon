@@ -15,47 +15,38 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 
 /**
  * Add your docs here.
  */
 public class IntakeSubsystem extends SubsystemBase {
-  private static final int deviceID1 = 9;
-  private static final int deviceID2 = 5;
   VictorSPX m_intake;
-  VictorSPX m_floor;
-  double modifyer = 0.25;
+  TalonSRX m_floor;
 
 
   
   public IntakeSubsystem(){
-    m_intake = new VictorSPX(deviceID1);
-    m_floor = new VictorSPX(deviceID2); //pigeon in drive subsystem
+    m_intake = new VictorSPX(9);
+    m_floor = new TalonSRX(5); //pigeon in drive subsystem
   }
 
-  public void setIntakeSpeed(boolean button){ //sets and regulates turret speed
-    double speed = 0;
-    double modifier = 0.5;
-    if (button == true) {
+  public void setIntakeSpeed(double speed){ //sets and regulates intake speed
+    if (speed > 1) {
       speed = 1;
     }
-    else if (button == false) {
-      speed = 0;
+    else if (speed < -1) {
+      speed = -1;
     }
-    m_intake.set(ControlMode.PercentOutput, speed * modifier); 
-    
+    m_intake.set(ControlMode.PercentOutput, speed*0.5); 
   }
-  public void setFloorSpeed(boolean button){ //sets and regulates turret speed
-    double speed = 0;
-    double modifier = 0.5;
-    if (button == true) {
-      speed = 1;
-    }
-    else if (button == false) {
-      speed = 0;
-    }
-    m_floor.set(ControlMode.PercentOutput, speed * modifier); 
+
+  public void setFloorSpeed(double speed){
+    if (speed > 1) {
+        speed = 1;
+      }
+    else if (speed < -1) {
+        speed = -1;
+      }
+    m_floor.set(ControlMode.PercentOutput, speed*0.5);
   }
 }

@@ -64,6 +64,9 @@ public class OI extends SubsystemBase {
   public boolean circle(){ //autoaim
     return joy.getRawButtonPressed(3);
   }
+  public boolean circleup(){
+    return joy.getRawButtonReleased(3);
+  }
 
   public boolean triangle(){ //turret encoder reset
     return joy.getRawButtonPressed(4);

@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
   JoystickButton btn;
   DriveForward drive_forward;
   DriveBackward drive_backward;
+  Limelight turret_Limelight;
   
  
 
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
+    turret_Limelight = new Limelight("Turret");
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
    
@@ -112,8 +114,8 @@ public class Robot extends TimedRobot {
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
-    leftAdjust -= steeringAdjust();//adjust each side according to tx
-    rightAdjust += steeringAdjust();
+    leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
+    rightAdjust += turret_Limelight.steeringAdjust();
 
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
@@ -172,14 +174,15 @@ public class Robot extends TimedRobot {
     turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
     //Autoaim (toggle)
-    if (oi.circle()){
-      if (camera_subsystem.isTarget()==false){
-        //if there is no target, do nothing
-      }else if((camera_subsystem.isTarget()==true)){
-        double adjust = distanceAdjust();//if there is a target, get the distance from it
-        turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+    if (oi.circle()==true){
+      while(oi.circleup()!=true){
+        if (turret_Limelight.canSeeTarget()==false){
+          //if there is no target, do nothing
+        }else if((turret_Limelight.canSeeTarget()==true)){
+          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+        }
       }
-      
     }
 
     turret_subsystem.feeder(oi.r1());
@@ -205,59 +208,7 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   //Other functions
-  public double steeringAdjust() {
-    float kp = -.05f;
-    float minCommand = .005f;
-    float steeringAdjust = 0.05f;
-    float tx = (float)camera_subsystem.getTx();
-    //SmartDashboard.setDefaultNumber("TX", tx);
-    float headingError = -tx;
   
-    if(tx > 1) {
-        steeringAdjust = kp*headingError -minCommand;
-    }else if (tx < 1){
-        steeringAdjust = kp*headingError + minCommand;
-    }
-    return steeringAdjust;
-  }
-
-  public double distanceAdjust(){
-    float KpDist = -0.1f;
-    float ty = (float)camera_subsystem.getTy();
-    float distance_error = -ty;
-    float distance_adjust = distance_error*KpDist;
-    if (distance_adjust > 1){
-      distance_adjust = 1;
-    }else if(distance_adjust <-1){
-      distance_adjust = -1;
-    }
-
-    return distance_adjust;
-  }
-  /*
-  
-if (joystick->GetRawButton(9))
-{
-        float heading_error = -tx;
-        float distance_error = -ty;
-        float steering_adjust = 0.0f;
-
-        if (tx > 1.0)
-        {
-                steering_adjust = KpAim*heading_error - min_aim_command;
-        }
-        else if (tx < 1.0)
-        {
-                steering_adjust = KpAim*heading_error + min_aim_command;
-        }
-
-        float distance_adjust = KpDistance * distance_error;
-
-        left_command += steering_adjust + distance_adjust;
-        right_command -= steering_adjust + distance_adjust;
-}
-  */
-
   public void print(String value){
     System.out.println(value);
   }

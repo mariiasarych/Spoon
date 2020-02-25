@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
@@ -24,9 +23,21 @@ public class Limelight extends SubsystemBase {
     public double offsetY() {
         return table.getEntry("ty").getDouble(0.00);
     }
+    //a value determined on the number of pipelines we have (created within limelight-local:5801)
+    public void setPipeline(int mode) {
+        table.getEntry("pipeline").setNumber(mode);
+    }
+    //a value between 0 and 1, 0 being on, 1 being off 
+    public void setLEDMode(int mode) {
+        table.getEntry("ledMode").setNumber(mode);
+    }
+    //a value between 0 and 1, 0 being on, 1 being off 
+    public void setCamMode(int mode) {
+        table.getEntry("camMode").setNumber(mode);
+    }
 
-    public void setpipeline(){
-        
+    public void setLightPipeline() {
+
     }
 
     public double steeringAdjust() {

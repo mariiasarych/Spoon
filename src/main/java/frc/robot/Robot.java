@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   DriveSubsystem drive_subsystem;
-  CameraSubsystem camera_subsystem;
+  //CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
   OI oi;
   TurretSubsystem turret_subsystem;
@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     drive_subsystem = new DriveSubsystem();
-    camera_subsystem = new CameraSubsystem();
+    //camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
     double mindistance = 5;
     leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
     rightAdjust += turret_Limelight.steeringAdjust();
-
+/*
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
      }else{
@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
          }
      }
   }
-
+*/}
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
@@ -137,7 +137,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    camera_subsystem.ledOff();
+    //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8));
@@ -208,7 +208,7 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   //Other functions
-  
+
   public void print(String value){
     System.out.println(value);
   }

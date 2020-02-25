@@ -25,6 +25,10 @@ public class Limelight extends SubsystemBase {
         return table.getEntry("ty").getDouble(0.00);
     }
 
+    public void setpipeline(){
+        
+    }
+
     public double steeringAdjust() {
         float kp = -.05f;//Adjusts the value returned from Limelight
         float minCommand = .005f;//Minimum value a value can have

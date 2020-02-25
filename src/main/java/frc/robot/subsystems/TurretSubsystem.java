@@ -83,9 +83,10 @@ public class TurretSubsystem extends SubsystemBase {
     }
   }
   
-  // public void encoderReset(boolean button){
-  //   m_turret.setSelectedSensorPosition(0);
-  // }
+  public void encoderReset(boolean button){
+    if(button)
+    m_turret.setSelectedSensorPosition(0);
+  }
 
   public void shooter(double speed, double modifier){
     if (speed == 0.0){

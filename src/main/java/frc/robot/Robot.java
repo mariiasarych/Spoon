@@ -95,13 +95,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    // some autonomus to test
-    // autonomus1.schedule();
     
   }
 
@@ -180,7 +177,8 @@ public class Robot extends TimedRobot {
     }
 
     turret_subsystem.feeder(oi.r1());
-    turret_subsystem.encoderReset(oi.triangle());
+    // turret_subsystem.encoderReset(oi.triangle());
+    System.out.println(oi.triangle());
     intake_subsystem.setFloorSpeed(-oi.square());
     intake_subsystem.setIntakeSpeed(-oi.x());
     // encoder_subsystem.getPosition();    

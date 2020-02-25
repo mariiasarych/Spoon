@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 //Commands & Subsystems
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -24,7 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   DriveSubsystem drive_subsystem;
-  CameraSubsystem camera_subsystem;
+  //CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
   OI oi;
   TurretSubsystem turret_subsystem;
@@ -32,9 +34,14 @@ public class Robot extends TimedRobot {
   IntakeSubsystem intake_subsystem;
   double turretVal;
   double turretVal2;
+  private boolean m_LimelightHasValidTarget = false;
+  private double m_LimelightDriveCommand = 0.0;
+  private double m_LimelightSteerCommand = 0.0;
+
   JoystickButton btn;
   DriveForward drive_forward;
   DriveBackward drive_backward;
+  Limelight turret_Limelight;
   
  
 
@@ -42,10 +49,11 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     drive_subsystem = new DriveSubsystem();
-    camera_subsystem = new CameraSubsystem();
+    //camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
+    turret_Limelight = new Limelight("Turret");
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
    
@@ -106,9 +114,9 @@ public class Robot extends TimedRobot {
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
-    leftAdjust -= aimbot();//adjust each side according to tx
-    rightAdjust += aimbot();
-
+    leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
+    rightAdjust += turret_Limelight.steeringAdjust();
+/*
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
      }else{
@@ -119,7 +127,7 @@ public class Robot extends TimedRobot {
          }
      }
   }
-
+*/}
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
@@ -129,7 +137,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    camera_subsystem.ledOff();
+    //camera_subsystem.ledOff();
+    boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8));
   }
@@ -147,6 +156,7 @@ public class Robot extends TimedRobot {
     print("encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
+    /*
     if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
       while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
         turretVal2 = 0;//reduce right input
@@ -159,18 +169,20 @@ public class Robot extends TimedRobot {
         print("Below -8000 enc value, turret is"+turretVal);
       }
     }
+    */
     turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
     //Autoaim (toggle)
-    if (oi.circle()){
-      if (camera_subsystem.isTarget()==false){
-        //if there is no target, do nothing
-      }else if((camera_subsystem.isTarget()==true)){
-        double adjust = aimbot();//if there is a target, get the distance from it
-        turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+    if (oi.circle()==true){
+      while(oi.circleup()!=true){
+        if (turret_Limelight.canSeeTarget()==false){
+          //if there is no target, do nothing
+        }else if((turret_Limelight.canSeeTarget()==true)){
+          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+        }
       }
-      
     }
 
     turret_subsystem.feeder(oi.r1());
@@ -196,24 +208,9 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   //Other functions
-  public double aimbot() {
-    float kp = -.05f;
-    float minCommand = .005f;
-    float steeringAdjust = 0.05f;
-    //double txEntry = getValue("tx").getDouble(0.0);
-    float tx = (float)camera_subsystem.getTx();
-    //SmartDashboard.setDefaultNumber("TX", tx);
-    float headingError = -tx;
-
-    if(tx > 1) {
-        steeringAdjust = kp*headingError -minCommand;
-    }else if (tx < 1){
-        steeringAdjust = kp*headingError + minCommand;
-    }
-    return steeringAdjust;
-  }
 
   public void print(String value){
     System.out.println(value);
   }
+  
 }

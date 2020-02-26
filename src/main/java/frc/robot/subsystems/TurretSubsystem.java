@@ -48,7 +48,7 @@ public class TurretSubsystem extends SubsystemBase {
   public double encoderVal(){ //gets the raw values of the turret magnetic encoder
     double position = m_turret.getSelectedSensorPosition();
     // SmartDashboard.putString("turret encoder value " ,  m_turret.getSelectedSensorPosition());
-    System.out.println("turret encoder value " +  position);
+    // System.out.println("turret encoder value " +  position);
     return  position;
     //Counter clockwise from hopper is -10000
     //Clockwise from hopper is 10000

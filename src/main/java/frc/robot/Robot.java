@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
   //Autonomus1 autonomus1;
   //subsystem
   DriveSubsystem drive_subsystem;
-  //CameraSubsystem camera_subsystem;
+  Limelight turret_Limelight;
   EncoderSubsystem encoder_subsystem;
   OI oi;
   TurretSubsystem turret_subsystem;
@@ -45,9 +45,8 @@ public class Robot extends TimedRobot {
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
-
   JoystickButton btn;
-  Limelight turret_Limelight;
+  
   
  
 
@@ -188,15 +187,34 @@ public class Robot extends TimedRobot {
       }
     }
 
-    turret_subsystem.feeder(oi.r1());
+    // turret_subsystem.feeder(oi.r1());
     // turret_subsystem.encoderReset(oi.triangle());
-    System.out.println(oi.triangle());
     intake_subsystem.setFloorSpeed(-oi.square());
     intake_subsystem.setIntakeSpeed(-oi.x());
     // encoder_subsystem.getPosition();    
     // encoder_subsystem.getVelocity();
     turret_subsystem.encoderVal(); //turret encoder
     // turret_subsystem.shooterEncoder();
+
+    //test some commands i will use in autonomus
+    // if(oi.r1()){
+    //   drive_backward = new DriveBackward(drive_subsystem, encoder_subsystem, 2);
+    //   drive_backward.schedule();
+    // }
+
+    if(oi.r1()){
+      drive_forward = new DriveForward(drive_subsystem, encoder_subsystem, 2);
+      drive_forward.schedule();
+    }
+
+    // if(oi.r1()){
+    //   turn_left.schedule();
+    // }
+
+    // if(oi.r1()){
+    //   turn_right.schedule();
+    // }
+
 
   }
 

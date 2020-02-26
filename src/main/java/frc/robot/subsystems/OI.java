@@ -78,13 +78,8 @@ public class OI extends SubsystemBase {
     return joy.getRawButton(5);
   }
 
-  public double r1(){ 
-    if (joy.getRawButton(6) == true){
-      return 1.0;
-    }
-    else {
-      return 0.0;
-    }
+  public boolean r1(){ 
+    return joy.getRawButtonPressed(6);
   }
 
   public boolean l2(){ 

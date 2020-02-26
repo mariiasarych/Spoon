@@ -25,37 +25,43 @@ public class DriveForward extends CommandBase {
     encoder_subsysem = subsystem2;
     addRequirements(drive_subsystem);
     addRequirements(encoder_subsysem);
-    distance = distanceToTravel;
+    distance = -distanceToTravel;
+    System.out.println("dist " + distance);
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
     initialPosition = encoder_subsysem.getPosition();
+    System.out.println("pos init " + initialPosition);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
     currentPosition = encoder_subsysem.getPosition();
+    System.out.println("current pos" + currentPosition);
+
     if (currentPosition - initialPosition == 0){
       drive_subsystem.tankDrive(1.0, 1.0, mod);
     }
     else if(currentPosition - initialPosition < distance){
       drive_subsystem.tankDrive(1.0, 1.0, mod);
     }
-    
+    System.out.println("distance" + (currentPosition-initialPosition)); 
   }
 
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
+    System.out.println("end");
     drive_subsystem.tankDrive(0.0, 0.0, mod);
   }
   
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    return (currentPosition - initialPosition >= distance);
+    System.out.println("is finished");
+    return (currentPosition - initialPosition <= distance);
   }
 }

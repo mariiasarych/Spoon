@@ -24,5 +24,8 @@ public double getVelocity(){ //drive encoder
     // System.out.println("drive encoder velocity" + encoder.getVelocity());
     return (double)encoder.getVelocity();
 }
+public void resetDriveEncoder(){
+    encoder.setPosition(0.0);
+}
 
 }

@@ -59,6 +59,8 @@ public class Robot extends TimedRobot {
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
     turret_Limelight = new Limelight("Turret");
+    turn_left = new TurnLeft(drive_subsystem);
+    turn_right = new TurnRight(drive_subsystem);
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
     // autonomus1 = new Autonomus1();
@@ -153,25 +155,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive_subsystem.tankDrive(oi.driveGetLeftStick(), oi.driveGetRightStick(), 0.95);
     drive_subsystem.getYaw();
-    //print("Encoder position is"+encoder_subsystem.getPosition());
-    //print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    // print("turret encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
-    /*
-    if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
-      while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
-        turretVal2 = 0;//reduce right input
-        print("Above 8000 enc value, turret is"+turretVal2);
-      }
-    }
-    if (turret_subsystem.encoderVal()<=-8000){
-      while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
-        turretVal = 0;//reduce left input
-        print("Below -8000 enc value, turret is"+turretVal);
-      }
-    }
-    */
+
     turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
@@ -195,27 +181,6 @@ public class Robot extends TimedRobot {
     // encoder_subsystem.getVelocity();
     turret_subsystem.encoderVal(); //turret encoder
     // turret_subsystem.shooterEncoder();
-
-    //test some commands i will use in autonomus
-    // if(oi.r1()){
-    //   drive_backward = new DriveBackward(drive_subsystem, encoder_subsystem, 2);
-    //   drive_backward.schedule();
-    // }
-
-    if(oi.r1()){
-      drive_forward = new DriveForward(drive_subsystem, encoder_subsystem, 2);
-      drive_forward.schedule();
-    }
-
-    // if(oi.r1()){
-    //   turn_left.schedule();
-    // }
-
-    // if(oi.r1()){
-    //   turn_right.schedule();
-    // }
-
-
   }
 
   @Override

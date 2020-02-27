@@ -15,13 +15,16 @@ public class moveByXDegrees extends CommandBase {
   double initialAngle;
   double currentAngle;
   double destinationAngle;
+  double i_destinationAngle;
   double maxAngle;
   double minAngle;
+  double angle_input;
   /**
    * Creates a new moveByXDegrees.
    */
-  public moveByXDegrees(TurretSubsystem subsystem) {
+  public moveByXDegrees(TurretSubsystem subsystem,double d_angle) {
     turret_subsystem = subsystem; 
+    d_angle = i_destinationAngle;
     addRequirements(turret_subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -30,20 +33,30 @@ public class moveByXDegrees extends CommandBase {
   @Override
   public void initialize() {
     initialAngle = turret_subsystem.encoderVal();
+    
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    maxAngle = 90; //encoder's values are not yet transformed to degrees
-    minAngle = -90; //encoder's values are not yet transformed to degrees
+    destinationAngle = i_destinationAngle + initialAngle;
+    if (destinationAngle <= -72) {
+      destinationAngle = -72;
+    }
+    else if (destinationAngle >= 72){
+      destinationAngle = 72;
+    }
+    
+    maxAngle = 72; 
+    minAngle = -72;
+    angle_input = turret_subsystem.encoderVal();
+    currentAngle = (((angle_input + 10000)* 180)/20000) - 90;
 
-    currentAngle = turret_subsystem.encoderVal();
-
-    if (currentAngle - initialAngle < destinationAngle && currentAngle <= maxAngle) {
+    if (currentAngle < destinationAngle) {
       turret_subsystem.setTurretSpeed(1);
     }
-    else if (currentAngle -initialAngle > destinationAngle && currentAngle >= minAngle) {
+    else if (currentAngle > destinationAngle) {
       turret_subsystem.setTurretSpeed(-1);
     }
    
@@ -53,13 +66,13 @@ public class moveByXDegrees extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     turret_subsystem.setTurretSpeed(0);
+    System.out.print(currentAngle);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (currentAngle - initialAngle == destinationAngle);
-    
+      return (currentAngle == destinationAngle);
     
   }
 }

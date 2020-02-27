@@ -7,8 +7,12 @@
 
 package frc.robot.subsystems;
 
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.*;
+import frc.robot.commands.ShootingCommand;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.subsystems.*;
 
 public class OI extends SubsystemBase {
   public Joystick joy; //creates joy
@@ -16,6 +20,12 @@ public class OI extends SubsystemBase {
   public OI() {
     joy = new Joystick(0); //assigns joy to a joystick
   }
+
+  public Joystick getController() {
+    return joy;
+  }
+
+  //all axes 
 
   public double getLeftStick(){ //gets the value of the axis, inverted so forward is 1
     return joy.getRawAxis(1);
@@ -33,40 +43,46 @@ public class OI extends SubsystemBase {
     return joy.getRawAxis(5);
   }
 
-  public boolean square(){ //gets event of pressing not state
-    return joy.getRawButtonPressed(1);
+  /* all buttons
+  getRawButtonPressed for the event and
+  getRawButton for the state of the button */
+
+  public double square(){ //floor
+    if (joy.getRawButton(1)){
+      return 1.0;
+    } else
+    return 0.0;
   }
 
-  public boolean x(){ 
-    return joy.getRawButtonPressed(2);
+  public double x(){ //intake
+    if (joy.getRawButton(2)){
+      return 1.0;
+    } else
+    return 0.0;
   }
 
-  public boolean circle(){
+  public boolean circle(){ //autoaim
     return joy.getRawButtonPressed(3);
   }
+  public boolean circleup(){
+    return joy.getRawButtonReleased(3);
+  }
 
-  public boolean triangle(){ 
+  public boolean triangle(){ //turret encoder reset
     return joy.getRawButtonPressed(4);
   }
 
-  public double l1(){ //reutrs motor speed value from button, for left shooting falcon
-    double shooterSpeed;
-    if (joy.getRawButton(5)){
-        shooterSpeed = 1.0;}
-        else {
-          shooterSpeed = 0.0;
-        }
-    return shooterSpeed;
+  public boolean l1(){ //shooting command
+    return joy.getRawButton(5);
   }
 
   public double r1(){ 
-    double feederSpeed;
-    if (joy.getRawButton(6)){
-      feederSpeed = 1.0;}
-      else {
-        feederSpeed = 0.0;
-      }
-  return feederSpeed;
+    if (joy.getRawButton(6) == true){
+      return 1.0;
+    }
+    else {
+      return 0.0;
+    }
   }
 
   public boolean l2(){ 

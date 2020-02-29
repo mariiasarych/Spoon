@@ -22,26 +22,31 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot {  
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  //commands
+  DriveForward drive_forward;
+  DriveBackward drive_backward;
+  TurnLeft turn_left;
+  TurnRight turn_right;
+  ShootingCommand shooting_command;
+  //Autonomus1 autonomus1;
+  //subsystem
   DriveSubsystem drive_subsystem;
-  //CameraSubsystem camera_subsystem;
+  Limelight turret_Limelight;
   EncoderSubsystem encoder_subsystem;
   OI oi;
   TurretSubsystem turret_subsystem;
-  ShootingCommand shooting_command;
   IntakeSubsystem intake_subsystem;
+  //variables
   double turretVal;
   double turretVal2;
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
-
   JoystickButton btn;
-  DriveForward drive_forward;
-  DriveBackward drive_backward;
-  Limelight turret_Limelight;
+  
   
  
 
@@ -54,8 +59,11 @@ public class Robot extends TimedRobot {
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
     turret_Limelight = new Limelight("Turret");
+    turn_left = new TurnLeft(drive_subsystem);
+    turn_right = new TurnRight(drive_subsystem);
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
+    // autonomus1 = new Autonomus1();
    
 
 
@@ -96,14 +104,11 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    // some autonomus to test in the future
-    // new DriveForward(drive_subsystem, encoder_subsystem, 2);
-    // new DriveBackward(drive_subsystem, encoder_subsystem, 4);
+    
   }
 
   /**
@@ -140,7 +145,7 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8));
+    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8, 14000));
   }
 
   /**
@@ -148,28 +153,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 0.95);
+    drive_subsystem.tankDrive(oi.driveGetLeftStick(), oi.driveGetRightStick(), 0.95);
     drive_subsystem.getYaw();
-    //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
-    //print("Encoder position is"+encoder_subsystem.getPosition());
-    //print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    print("encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
-    /*
-    if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
-      while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
-        turretVal2 = 0;//reduce right input
-        print("Above 8000 enc value, turret is"+turretVal2);
-      }
-    }
-    if (turret_subsystem.encoderVal()<=-8000){
-      while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
-        turretVal = 0;//reduce left input
-        print("Below -8000 enc value, turret is"+turretVal);
-      }
-    }
-    */
+
     turretVal2 = turretVal-turretVal2;//final calculations
     turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
@@ -185,14 +173,14 @@ public class Robot extends TimedRobot {
       }
     }
 
-    turret_subsystem.feeder(oi.r1());
-    turret_subsystem.encoderReset(oi.triangle());
+    // turret_subsystem.feeder(oi.r1());
+    // turret_subsystem.encoderReset(oi.triangle());
     intake_subsystem.setFloorSpeed(-oi.square());
     intake_subsystem.setIntakeSpeed(-oi.x());
-    encoder_subsystem.getPosition();
-    encoder_subsystem.getVelocity();
+    // encoder_subsystem.getPosition();    
+    // encoder_subsystem.getVelocity();
+    turret_subsystem.encoderVal(); //turret encoder
     // turret_subsystem.shooterEncoder();
-
   }
 
   @Override

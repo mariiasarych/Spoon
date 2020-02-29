@@ -19,6 +19,7 @@ public class moveByXDegrees extends CommandBase {
   double maxAngle;
   double minAngle;
   double angle_input;
+  double i_intialangle;
   /**
    * Creates a new moveByXDegrees.
    */
@@ -32,15 +33,15 @@ public class moveByXDegrees extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    initialAngle = turret_subsystem.encoderVal();
+    i_intialangle = turret_subsystem.encoderVal();
+    initialAngle = ((((angle_input + 10000)* 180)/20000) - 90);
     
-  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    destinationAngle = i_destinationAngle + initialAngle;
+    destinationAngle = (i_destinationAngle + initialAngle);
     if (destinationAngle <= -72) {
       destinationAngle = -72;
     }
@@ -51,13 +52,13 @@ public class moveByXDegrees extends CommandBase {
     maxAngle = 72; 
     minAngle = -72;
     angle_input = turret_subsystem.encoderVal();
-    currentAngle = (((angle_input + 10000)* 180)/20000) - 90;
+    currentAngle = ((((angle_input + 10000)* 180)/20000) - 90);
 
     if (currentAngle < destinationAngle) {
-      turret_subsystem.setTurretSpeed(1);
+      turret_subsystem.setTurretSpeed(1, .25);
     }
     else if (currentAngle > destinationAngle) {
-      turret_subsystem.setTurretSpeed(-1);
+      turret_subsystem.setTurretSpeed(-1, .25);
     }
    
   }
@@ -65,7 +66,7 @@ public class moveByXDegrees extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret_subsystem.setTurretSpeed(0);
+    turret_subsystem.setTurretSpeed(0, .25);
     System.out.print(currentAngle);
   }
 
